@@ -9,30 +9,10 @@ import ChatIntro from "./components/ChatIntro";
 import ChatWindow from "./components/ChatWindow";
 import NewChat from "./components/NewChat";
 import Login from "./components/Login";
+import Api from "./Api";
 
 export default () => {
-  const [chatList, setChatList] = useState([
-    {
-      chatId: 1,
-      title: "Gabriel leandro",
-      image: "https://www.w3schools.com/howto/img_avatar2.png",
-    },
-    {
-      chatId: 2,
-      title: "Pedro da Silva",
-      image: "https://www.w3schools.com/howto/img_avatar2.png",
-    },
-    {
-      chatId: 3,
-      title: "Adalberto Santos",
-      image: "https://www.w3schools.com/howto/img_avatar2.png",
-    },
-    {
-      chatId: 4,
-      title: "Ana júlia",
-      image: "https://www.w3schools.com/howto/img_avatar2.png",
-    },
-  ]);
+  const [chatList, setChatList] = useState([]);
   const [activeChat, setActiveChat] = useState({});
   const [user, setUser] = useState(null);
   const [showNewChat, setShowNewChat] = useState(false);
@@ -46,12 +26,20 @@ export default () => {
       name: u.displayName,
       avatar: u.photoURL,
     };
+    await Api.addUser(newUser);
     setUser(newUser);
   };
 
   if (user === null) {
     return <Login onReceive={handleLoginData} />;
   }
+
+  useEffect(() => {
+    if (user !== null) {
+      let unsub = Api.onChatList(user.id, setChatList);
+      return unsub;
+    }
+  }, [user]);
 
   return (
     <div className="app-window">
@@ -98,7 +86,11 @@ export default () => {
         </div>
       </div>
       <div className="content-area">
-        {activeChat.chatId ? <ChatWindow user={user} /> : <ChatIntro />}
+        {activeChat.chatId ? (
+          <ChatWindow user={user} data={activeChat} />
+        ) : (
+          <ChatIntro />
+        )}
       </div>
     </div>
   );

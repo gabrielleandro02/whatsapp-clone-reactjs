@@ -8,10 +8,11 @@ import SendIcon from "@material-ui/icons/Send";
 import MicIcon from "@material-ui/icons/Mic";
 import EmojiPicker from "emoji-picker-react";
 import MessageItem from "./MessageItem";
+import Api from "../Api";
 
 import "./ChatWindow.css";
 
-export default ({ user }) => {
+export default ({ user, data }) => {
   let recognition = null;
 
   let SpeechRecognition =
@@ -26,26 +27,8 @@ export default ({ user }) => {
   const [emojiOpen, setEmojiOpen] = useState(false);
   const [text, setText] = useState("");
   const [listening, setListening] = useState(false);
-  const [list, setList] = useState([
-    { author: 133, body: "Olá Gabriel você é muito bonito" },
-    { author: 123, body: "Porque não me responde?" },
-    { author: 123, body: "Fala comigo" },
-    { author: 133, body: "Olá Gabriel você é muito bonito" },
-    { author: 123, body: "Porque não me responde?" },
-    { author: 123, body: "Fala comigo" },
-    { author: 133, body: "Olá Gabriel você é muito bonito" },
-    { author: 123, body: "Porque não me responde?" },
-    { author: 123, body: "Fala comigo" },
-    { author: 133, body: "Olá Gabriel você é muito bonito" },
-    { author: 123, body: "Porque não me responde?" },
-    { author: 123, body: "Fala comigo" },
-    { author: 133, body: "Olá Gabriel você é muito bonito" },
-    { author: 123, body: "Porque não me responde?" },
-    { author: 123, body: "Fala comigo" },
-    { author: 133, body: "Olá Gabriel você é muito bonito" },
-    { author: 123, body: "Porque não me responde?" },
-    { author: 123, body: "Fala comigo" },
-  ]);
+  const [list, setList] = useState([]);
+  const [users, setUsers] = useState([]);
 
   const handleEmojiClick = (e, emojiObject) => {
     setText(text + emojiObject.emoji);
@@ -59,7 +42,19 @@ export default ({ user }) => {
     setEmojiOpen(false);
   };
 
-  const handleSendClick = () => {};
+  const handleSendClick = async () => {
+    if (text !== null) {
+      await Api.sendMessage(data, user.id, "text", text, users);
+      setText("");
+      setEmojiOpen(false);
+    }
+  };
+
+  const handleInputKeyUp = (e) => {
+    if (e.keyCode === 13) {
+      handleSendClick();
+    }
+  };
 
   const handleMicClick = () => {
     if (recognition !== null) {
@@ -84,16 +79,22 @@ export default ({ user }) => {
     }
   }, [list]);
 
+  useEffect(() => {
+    setList([]);
+    let unsub = Api.onChatContent(data.chatId, setList, setUsers);
+    return unsub;
+  }, [data.chatId]);
+
   return (
     <div className="chatWindow">
       <div className="chatWindow-header">
         <div className="chatWindow-headerinfo">
           <img
             className="chatWindow-avatar"
-            src="https://www.w3schools.com/howto/img_avatar2.png"
-            alt=""
+            src={data.image}
+            alt="avatar-destinatary-chat"
           />
-          <div className="chatWindow-name">Gabriel leandro</div>
+          <div className="chatWindow-name">{data.title}</div>
         </div>
 
         <div className="chatWindow-headerbuttons">
@@ -147,6 +148,7 @@ export default ({ user }) => {
             className="chatWindow-input"
             type="text"
             placeholder="Digite uma mensagem"
+            onKeyUp={handleInputKeyUp}
           />
         </div>
         <div className="chatWindow-pos">
