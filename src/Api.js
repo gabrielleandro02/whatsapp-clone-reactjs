@@ -77,10 +77,10 @@ export default {
           if (data.chats) {
             let chats = [...data.chats];
             chats.sort((a, b) => {
-              if (a.lastMessageDate === undefined) {
+              if (!a.lastMessageDate) {
                 return -1;
               }
-              if (b.lastMessageDate === undefined) {
+              if (!b.lastMessageDate) {
                 return -1;
               }
               if (a.lastMessageDate.seconds < b.lastMessageDate.seconds) {
@@ -90,7 +90,7 @@ export default {
               }
             });
 
-            setChatList(data.chats);
+            setChatList(chats);
           }
         }
       });

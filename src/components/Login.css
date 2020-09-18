@@ -6,6 +6,9 @@
   flex-direction: column;
   justify-content: center;
 }
+.login-text {
+  text-align: center;
+}
 .login-button {
   height: 40px;
   margin-top: 30px;

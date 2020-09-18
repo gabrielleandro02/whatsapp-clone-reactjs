@@ -38,7 +38,7 @@
 }
 
 .chatWindow-btn {
-  width: 40px;
+  width: 30px;
   height: 40px;
   border-radius: 50%;
   display: flex;
@@ -75,7 +75,7 @@
 }
 .chatWindow-pre {
   display: flex;
-  margin: 0 15px;
+  margin: 0 5px;
 }
 
 .chatWindow-inputarea {
@@ -100,7 +100,7 @@
 .chatWindow-emojiarea {
   height: 200px;
   overflow-y: hidden;
-  transition: all ease 0.3s;
+  transition: all ease 0.2s;
 }
 
 aside.emoji-picker-react {

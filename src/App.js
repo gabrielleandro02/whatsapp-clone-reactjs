@@ -14,7 +14,7 @@ import Api from "./Api";
 export default () => {
   const [chatList, setChatList] = useState([]);
   const [activeChat, setActiveChat] = useState({});
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState();
   const [showNewChat, setShowNewChat] = useState(false);
   const handleNewChat = () => {
     setShowNewChat(true);
@@ -30,16 +30,16 @@ export default () => {
     setUser(newUser);
   };
 
-  if (user === null) {
-    return <Login onReceive={handleLoginData} />;
-  }
-
   useEffect(() => {
-    if (user !== null) {
+    if (user) {
       let unsub = Api.onChatList(user.id, setChatList);
       return unsub;
     }
   }, [user]);
+
+  if (!user) {
+    return <Login onReceive={handleLoginData} />;
+  }
 
   return (
     <div className="app-window">

@@ -6,7 +6,7 @@ export default ({ onReceive }) => {
   const handleGoogleLogin = async () => {
     try {
       let result = await Api.ggPopup();
-      onReceive(result.user);
+      onReceive(result?.user);
     } catch (error) {
       alert("Erro");
     }
@@ -14,11 +14,11 @@ export default ({ onReceive }) => {
   return (
     <div className="login">
       <img
-        style={{ width: "200px", height: "200px" }}
+        style={{ width: "180px", height: "180px" }}
         src="https://i.pinimg.com/736x/93/b2/65/93b265c795140247db600ac92e58746a.jpg"
         alt="icon-whats"
       ></img>
-      <h1>Bem vindo ao projeto whatsapp-clone</h1>
+      <h1 className="login-text">Bem vindo ao projeto whatsapp-clone</h1>
       <button className="login-button" onClick={handleGoogleLogin}>
         Logar com Google
       </button>

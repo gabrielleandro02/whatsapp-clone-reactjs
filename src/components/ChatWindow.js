@@ -44,15 +44,15 @@ export default ({ user, data }) => {
 
   const handleSendClick = async () => {
     if (text !== null) {
-      await Api.sendMessage(data, user.id, "text", text, users);
       setText("");
+      await Api.sendMessage(data, user.id, "text", text, users);
       setEmojiOpen(false);
     }
   };
 
-  const handleInputKeyUp = (e) => {
+  const handleInputKeyUp = async (e) => {
     if (e.keyCode === 13) {
-      handleSendClick();
+      await handleSendClick();
     }
   };
 
@@ -118,11 +118,7 @@ export default ({ user, data }) => {
         className="chatWindow-emojiarea"
         style={{ height: emojiOpen ? "200px" : 0 }}
       >
-        <EmojiPicker
-          disableSearchBar
-          disableSkinTonePicker
-          onEmojiClick={handleEmojiClick}
-        />
+        <EmojiPicker disableSearchBar onEmojiClick={handleEmojiClick} />
       </div>
       <div className="chatWindow-footer">
         <div className="chatWindow-pre">
